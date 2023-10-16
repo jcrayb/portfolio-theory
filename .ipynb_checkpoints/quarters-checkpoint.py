@@ -50,7 +50,7 @@ def get_mean_rfr_between_years(start_year:int, end_year:int)-> pd.DataFrame:
             
             quarterly_rfr_df['avg_rfr'][f'{year}-{quarter}'] = quarter_rfr
             
-    return quarterly_rfr_df
+    return quarterly_rfr_df/100
 
 def get_gdp_growth(quarter: str) -> float:
     try:
