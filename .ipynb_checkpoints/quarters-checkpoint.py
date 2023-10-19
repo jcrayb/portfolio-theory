@@ -64,3 +64,39 @@ def get_gdp_growth_between_years(start_year:int, end_year:int) -> pd.DataFrame:
     for quarter in quarters:
         growth_df['growth'][quarter] = gdp_data['growth_%'][quarter]/100
     return growth_df
+
+def get_inflation_between_years(start_year:int, end_year:int) -> pd.DataFrame:
+    quarters = get_names_between_years(start_year, end_year)
+    q_dates = get_dates_between_years(start_year, end_year)
+
+    inflation_df = pd.read_csv('./data/cpi_qoq_change.csv').set_index('DATE')
+    
+    df = pd.DataFrame(0, index=quarters, columns=['inflation'])
+    for quarter in quarters:
+        split = quarter.split('-')
+        year = int(split[0])
+        name = split[1]
+        
+        date = q_dates[year][name]['start'].strftime('%Y-%m-%d')
+        
+        inflation = inflation_df['inflation'][date]
+        df['inflation'][quarter] = inflation
+    return df/100
+
+def get_unemployment_between_years(start_year:int, end_year:int) -> pd.DataFrame:
+    quarters = get_names_between_years(start_year, end_year)
+    q_dates = get_dates_between_years(start_year, end_year)
+
+    unem_df = pd.read_csv('./data/unemployment_rate.csv').set_index('DATE')
+    
+    df = pd.DataFrame(0, index=quarters, columns=['unemployment'])
+    for quarter in quarters:
+        split = quarter.split('-')
+        year = int(split[0])
+        name = split[1]
+        
+        date = q_dates[year][name]['start'].strftime('%Y-%m-%d')
+        
+        unem = unem_df['UNRATE'][date]
+        df['unemployment'][quarter] = unem
+    return df/100
