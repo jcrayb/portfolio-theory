@@ -47,6 +47,7 @@ def get_all_returns_between_years(start_year:int, end_year:int) -> pd.DataFrame:
         if quarterly_returns_df[company].iloc[0] == 0 and quarterly_returns_df[company].iloc[1] == 0:
             quarterly_returns_df = quarterly_returns_df.drop(company, axis=1)
             print('invalid', company)
+    quarterly_returns_df.to_csv(f'./data/returns/returns_{start_year}-{end_year}.csv')
     return quarterly_returns_df
 
 def get_throughout(start_year:int) -> tuple:

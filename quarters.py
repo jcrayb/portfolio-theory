@@ -2,6 +2,7 @@ import pandas as pd
 import datetime
 import yfinance as yf
 from dateutil.relativedelta import relativedelta
+import os
 
 from utils import tz
 
@@ -33,6 +34,9 @@ def get_dates_between_years(start_year:int, end_year:int) -> dict:
     return quarters
 
 def get_mean_rfr_between_years(start_year:int, end_year:int)-> pd.DataFrame:
+    if os.path.exists(f'./cached/mean_rfr-{start_year}-{end_year}.csv'):
+        quarterly_rfr_df = pd.read_csv(f'./cached/mean_rfr-{start_year}-{end_year}.csv').set_index('Unnamed: 0')
+        return quarterly_rfr_df
     start_date = datetime.datetime(year=start_year, month=1, day=1)
     IRX_hist = yf.Ticker('^IRX').history(start=start_date)['Close'].reset_index()
 
@@ -48,9 +52,9 @@ def get_mean_rfr_between_years(start_year:int, end_year:int)-> pd.DataFrame:
             mask = (IRX_hist['Date'] >= quarter_start_date) & (IRX_hist['Date'] < quarter_end_date)
             quarter_rfr = IRX_hist.loc[mask]['Close'].mean()
             
-            quarterly_rfr_df['avg_rfr'][f'{year}-{quarter}'] = quarter_rfr
-            
-    return quarterly_rfr_df/100
+            quarterly_rfr_df['avg_rfr'][f'{year}-{quarter}'] = quarter_rfr/100
+    quarterly_rfr_df.to_csv(f'./cached/mean_rfr-{start_year}-{end_year}.csv')
+    return quarterly_rfr_df
 
 def get_gdp_growth(quarter: str) -> float:
     try:
