@@ -17,8 +17,7 @@ def compare_to_benchmark(weights, companies, start_date, benchmark='SPY'):
             history = history.loc[history.index>=start_date]
             try:
                 adjusted = history/history.iloc[0]*w
-            except Exception as e: 
-                print(e)
+            except:
                 continue
             markowitz[company] = adjusted
         
