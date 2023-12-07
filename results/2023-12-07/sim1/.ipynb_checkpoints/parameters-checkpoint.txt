@@ -1,0 +1,7 @@
+Training set: [1995-2019)
+Benchmark = QQQ
+
+Used real-life quarter data + added randomness:
+
+GDP -> real-life data + N(mu = 0, stdev = 0.005)
+RFR -> real-life data + N(mu = 0, stdev = 0.1*rfr)
